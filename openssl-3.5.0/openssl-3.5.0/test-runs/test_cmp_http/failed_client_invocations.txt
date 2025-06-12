@@ -1,0 +1,33 @@
+Mock connection "path with additional '/'s fine according to RFC 3986" (22/39) expected=1 (success) actual=0
+../../../../util/wrap.pl ../../../../apps/openssl.exe cmp -server '[::1]:50869' -config ../Mock/test.cnf -section 'Mock connection' -certout ../../../../test-runs/test_cmp_http/test.cert.pem -proxy '' -no_proxy '::1' -path /pkix/////
+
+Mock verification "default test" (1/46) expected=1 (success) actual=0
+../../../../util/wrap.pl ../../../../apps/openssl.exe cmp -server '[::1]:50869' -config ../Mock/test.cnf -section 'Mock verification' -certout ../../../../test-runs/test_cmp_http/test.cert.pem -proxy '' -no_proxy '::1' -recipient '/CN=Root CA' -trusted trusted.crt -unprotected_errors
+
+Mock verification "unknown attribute in recipient name" (3/46) expected=1 (success) actual=0
+../../../../util/wrap.pl ../../../../apps/openssl.exe cmp -server '[::1]:50869' -config ../Mock/test.cnf -section 'Mock verification' -certout ../../../../test-runs/test_cmp_http/test.cert.pem -proxy '' -no_proxy '::1' -recipient '/CN=Root CA/ABC=123' -trusted trusted.crt -unprotected_errors
+
+Mock verification "config default with expected sender" (7/46) expected=1 (success) actual=0
+../../../../util/wrap.pl ../../../../apps/openssl.exe cmp -server '[::1]:50869' -config ../Mock/test.cnf -section 'Mock verification' -certout ../../../../test-runs/test_cmp_http/test.cert.pem -proxy '' -no_proxy '::1' -recipient '/CN=Root CA' -expect_sender /CN=server.example -trusted trusted.crt -unprotected_errors
+
+Mock verification "unknown attribute in expected sender" (10/46) expected=1 (success) actual=0
+../../../../util/wrap.pl ../../../../apps/openssl.exe cmp -server '[::1]:50869' -config ../Mock/test.cnf -section 'Mock verification' -certout ../../../../test-runs/test_cmp_http/test.cert.pem -proxy '' -no_proxy '::1' -recipient '/CN=Root CA' -expect_sender /CN=server.example/ABC=123 -trusted trusted.crt -unprotected_errors
+
+Mock verification "untrusted not matching cert" (36/46) expected=1 (success) actual=0
+../../../../util/wrap.pl ../../../../apps/openssl.exe cmp -server '[::1]:50869' -config ../Mock/test.cnf -section 'Mock verification' -certout ../../../../test-runs/test_cmp_http/test.cert.pem -proxy '' -no_proxy '::1' -recipient '/CN=Root CA' -trusted trusted.crt -untrusted root.crt -unprotected_errors
+
+Mock verification "ignore key usage" (40/46) expected=1 (success) actual=0
+../../../../util/wrap.pl ../../../../apps/openssl.exe cmp -server '[::1]:50869' -config ../Mock/test.cnf -section 'Mock verification' -certout ../../../../test-runs/test_cmp_http/test.cert.pem -proxy '' -no_proxy '::1' -recipient '/CN=Root CA' -trusted trusted.crt -ignore_keyusage -unprotected_errors
+
+Mock verification "no unprotected errors - no errors" (42/46) expected=1 (success) actual=0
+../../../../util/wrap.pl ../../../../apps/openssl.exe cmp -server '[::1]:50869' -config ../Mock/test.cnf -section 'Mock verification' -certout ../../../../test-runs/test_cmp_http/test.cert.pem -proxy '' -no_proxy '::1' -recipient '/CN=Root CA' -trusted trusted.crt
+
+Mock verification "extracertsout" (44/46) expected=1 (success) actual=0
+../../../../util/wrap.pl ../../../../apps/openssl.exe cmp -server '[::1]:50869' -config ../Mock/test.cnf -section 'Mock verification' -certout ../../../../test-runs/test_cmp_http/test.cert.pem -proxy '' -no_proxy '::1' -recipient '/CN=Root CA' -trusted trusted.crt -unprotected_errors -extracertsout ../../../../test-runs/test_cmp_http/test.extracerts.pem -srvcertout ../../../../test-runs/test_cmp_http/test.srvcertout.pem
+
+Mock commands "use issuer and serial for revocation" (42/134) expected=1 (success) actual=0
+../../../../util/wrap.pl ../../../../apps/openssl.exe cmp -server '[::1]:50869' -config ../Mock/test.cnf -section 'Mock commands' -proxy '' -no_proxy '::1' -cmd rr -revreason -1 -expect_sender "" -issuer '/C=AU/ST=Some-State/O=Internet Widgits Pty Ltd/CN=subinterCA' -serial 0xA44DB0329A714A8D
+
+Mock enrollment "issuer" (21/101) expected=1 (success) actual=0
+../../../../util/wrap.pl ../../../../apps/openssl.exe cmp -server '[::1]:50869' -config ../Mock/test.cnf -section 'Mock enrollment' -certout ../../../../test-runs/test_cmp_http/test.cert.pem -proxy '' -no_proxy '::1' -cmd ir -newkey new.key -newkeypass 'pass:' -issuer '/CN=Root CA' -certout ../../../../test-runs/test_cmp_http/test.certout_issuer.pem -out_trusted root.crt
+
