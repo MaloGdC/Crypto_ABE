@@ -1,21 +1,44 @@
-FROM ubuntu:18.04
-MAINTAINER support@charm-crypto.com
+FROM python:3.10-slim
 
-RUN apt update && apt install --yes build-essential flex bison wget subversion m4 python3 python3-dev python3-setuptools libgmp-dev libssl-dev
-RUN wget https://crypto.stanford.edu/pbc/files/pbc-0.5.14.tar.gz && tar xvf pbc-0.5.14.tar.gz && cd /pbc-0.5.14 && ./configure LDFLAGS="-lgmp" && make && make install && ldconfig
+# Mise à jour et installation des dépendances système
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    wget \
+    subversion \
+    flex \
+    bison \
+    m4 \
+    libgmp-dev \
+    libssl-dev \
+    python3-tk \
+    x11-apps \
+    xauth \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Installation de PBC
+RUN wget https://crypto.stanford.edu/pbc/files/pbc-0.5.14.tar.gz && \
+    tar xvf pbc-0.5.14.tar.gz && \
+    cd pbc-0.5.14 && \
+    ./configure LDFLAGS="-lgmp" && \
+    make && make install && ldconfig && \
+    cd .. && rm -rf pbc-0.5.14 pbc-0.5.14.tar.gz
+
+# Copier et installer la bibliothèque charm
 COPY ./charm /charm
 RUN cd /charm && ./configure.sh && make && make install && ldconfig
-RUN apt install -y python3-pip
-RUN pip3 install pycryptodome
 
-# Dossier de travail pour tes scripts
+# Installer les paquets Python
+RUN pip install --no-cache-dir pycryptodome
+
+# Dossier de travail
 WORKDIR /app
 
-# Copier tes scripts Python
+# Copier les scripts
 COPY ./app_admin/src ./src
 
-# Créer les dossiers qui seront montés comme volumes
+# Créer les dossiers pour les volumes
 RUN mkdir -p /app/keys /app/users-keys /app/messages
 
-# Par défaut : ouvrir un shell
+# Point d’entrée par défaut
 CMD ["bash"]
