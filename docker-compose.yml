@@ -1,13 +1,26 @@
 version: '3.8'
 
 services:
-  charm:
+  admin:
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: charm-crypto-container
+      dockerfile: app_admin/Dockerfile
+    container_name: admin-container
     volumes:
       - charm_keys:/app/keys
+      - charm_users_keys:/app/users-keys
+      - messages:/app/messages
+    stdin_open: true
+    tty: true
+    command: bash
+
+  user:
+    build:
+      context: .
+      dockerfile: app_user/Dockerfile
+    container_name: user-container
+    volumes:
+      - charm_keys:/app/keys:ro       # en lecture seule si l'user ne doit pas écrire
       - charm_users_keys:/app/users-keys
       - messages:/app/messages
     stdin_open: true

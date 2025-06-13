@@ -12,7 +12,7 @@ RUN pip3 install pycryptodome
 WORKDIR /app
 
 # Copier tes scripts Python
-COPY ./src ./src
+COPY ./app_admin/src ./src
 
 # Créer les dossiers qui seront montés comme volumes
 RUN mkdir -p /app/keys /app/users-keys /app/messages
