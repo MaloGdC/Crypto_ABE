@@ -28,7 +28,7 @@ def actualiser_tableau():
 
 def valider_formulaire():
     name = nom_entry.get()
-    attributes = [e.get() for e in attributs_entries if e.get().strip()]
+    attributes = [e.get().strip().upper() for e in attributs_entries if e.get().strip()]
     print("Nouvel utilisateur :", name)
     print("Attributs :", attributes)
 
@@ -37,6 +37,19 @@ def valider_formulaire():
 
     # Mettre à jour le tableau
     actualiser_tableau()
+
+    # Réinitialiser le formulaire
+    nom_entry.delete(0, tk.END)
+
+    for e in attributs_entries:
+        e.destroy()
+    attributs_entries.clear()
+
+    ajouter_champ_attribut()  # Ajoute un seul champ vide par défaut
+
+    # Cacher le formulaire
+    form_canvas.pack_forget()
+
 
 if not os.listdir("../keys"):  
     gmk()
