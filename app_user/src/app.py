@@ -5,6 +5,13 @@ from decrypt_message import decrypt_message as dm
 import os
 
 # ===== Fonctions utilitaires =====
+def rafraichir_utilisateurs():
+    utilisateurs = ["no user"] + get_user_files()
+    user_combobox['values'] = utilisateurs
+    if user_var.get() not in utilisateurs:
+        user_var.set("no user")
+
+
 def get_user_files():
     path = "../users-keys"
     try:
@@ -96,8 +103,16 @@ def ouvrir_formulaire():
     nom_entry.pack(padx=10, pady=5)
 
     tk.Label(center_frame, text="Message à chiffrer :", bg="#f7f9fc").pack(anchor="w", padx=10, pady=(10, 0))
-    msg_entry = tk.Entry(center_frame, width=40)
-    msg_entry.pack(padx=10, pady=5)
+    msg_frame = tk.Frame(center_frame, bg="#f7f9fc")
+    msg_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
+
+    msg_entry = tk.Text(msg_frame, width=60, height=8, wrap="word", font=("Arial", 10))
+    msg_entry.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+    scrollbar = tk.Scrollbar(msg_frame, command=msg_entry.yview)
+    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+    msg_entry.config(yscrollcommand=scrollbar.set)
+
 
     tk.Label(center_frame, text="Politique CP-ABE (ex: (A and B) or (C and D)) :", bg="#f7f9fc").pack(anchor="w", padx=10, pady=(10, 0))
     policy_entry = tk.Entry(center_frame, width=60)
@@ -108,7 +123,7 @@ def ouvrir_formulaire():
 
     def valider():
         nom = nom_entry.get().strip()
-        msg = msg_entry.get().strip()
+        msg = msg_entry.get("1.0", tk.END).strip()
         policy = policy_entry.get().strip()
         if not nom:
             messagebox.showerror("Erreur", "Le nom de fichier est vide.")
@@ -122,6 +137,22 @@ def ouvrir_formulaire():
 
     tk.Button(button_frame, text="✔ Valider", bg="#27ae60", fg="white", relief="flat", padx=12, pady=6, command=valider).pack(side=tk.LEFT, padx=10)
     tk.Button(button_frame, text="Annuler", bg="#bdc3c7", fg="black", relief="flat", padx=12, pady=6, command=annuler).pack(side=tk.LEFT, padx=10)
+
+# ===== BAS DE PAGE =====
+bottom_frame = tk.Frame(root, bg="#f7f9fc")
+bottom_frame.pack(side=tk.BOTTOM, fill=tk.X, padx=20, pady=10)
+
+refresh_button = tk.Button(
+    bottom_frame, 
+    text="🔄 Rafraîchir utilisateurs", 
+    bg="#95a5a6", 
+    fg="white", 
+    relief="flat", 
+    padx=12, 
+    pady=6, 
+    command=rafraichir_utilisateurs
+)
+refresh_button.pack(side=tk.RIGHT)
 
 # ===== Initialisation =====
 afficher_fichiers()
