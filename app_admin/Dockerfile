@@ -40,5 +40,7 @@ COPY ./app_admin/src ./src
 # Créer les dossiers pour les volumes
 RUN mkdir -p /app/keys /app/users-keys /app/messages
 
+WORKDIR /app/src
+
 # Point d’entrée par défaut
-CMD ["bash"]
+CMD ["python3", "app.py"]
