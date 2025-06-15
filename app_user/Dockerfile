@@ -2,6 +2,7 @@ FROM python:3.10-slim
 
 # Mise à jour et installation des dépendances système
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
     build-essential \
     wget \
     subversion \
@@ -25,8 +26,11 @@ RUN wget https://crypto.stanford.edu/pbc/files/pbc-0.5.14.tar.gz && \
     cd .. && rm -rf pbc-0.5.14 pbc-0.5.14.tar.gz
 
 # Copier et installer la bibliothèque charm
-COPY ./charm /charm
-RUN cd /charm && ./configure.sh && make && make install && ldconfig
+RUN git clone https://github.com/JHUISI/charm.git /opt/charm && \
+    cd /opt/charm && \
+    ./configure.sh && \
+    make && \
+    make install && ldconfig
 
 # Installer les paquets Python
 RUN pip install --no-cache-dir pycryptodome
