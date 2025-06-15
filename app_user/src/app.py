@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from crypt_message import encrypt_hybrid as cm
+from encrypt_message import encrypt_hybrid as cm
 from decrypt_message import decrypt_message as dm
 import os
 
