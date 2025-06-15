@@ -9,7 +9,6 @@ services:
     volumes:
       - charm_keys:/app/keys
       - charm_users_keys:/app/users-keys
-      - messages:/app/messages
     environment:
       - DISPLAY=host.docker.internal:0.0
     stdin_open: true
